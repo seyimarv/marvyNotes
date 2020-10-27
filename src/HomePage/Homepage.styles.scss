@@ -1,0 +1,27 @@
+
+.homepage {
+    padding-top: 10px;
+    overflow: hidden;
+    height: 80vh;
+	display: flex;
+    flex-direction: column;
+    justify-content: center;
+   
+    background-size: cover;
+    background-repeat: no-repeat;
+       .container {
+           height: 100%;
+           font-weight: bold;
+           font-size: 50px;
+           color: rgb(66, 65, 65);
+           letter-spacing: 2px;
+       }
+        .image {
+            width: 100%;
+            height: 300px;
+        }
+
+    }
+    
+    
+

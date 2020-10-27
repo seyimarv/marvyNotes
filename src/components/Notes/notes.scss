@@ -1,0 +1,14 @@
+
+		.card {
+			border:  black 1px solid;
+			box-sizing: border-box;
+		    box-shadow:  0.5rem 1rem rgba(0,0,0,.15);
+			margin-bottom: 10px;
+
+			
+			&:hover {
+				transition-duration: 1s;
+				transform: scale(1.1);
+			}
+		}
+
