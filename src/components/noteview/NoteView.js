@@ -6,13 +6,15 @@ import firebase from '../../firebase/Firebase'
 
 
 
-const NoteView = ({id, title, textarea, setEditing, note, setNotes})=> {
+const NoteView = ({id, title, textarea, setEditing, note, setNotes, userId})=> {
 
-   
-    const noteRef = firebase.firestore().collection("/notes")
+   console.log(userId)
+    const noteRef = firebase.firestore().collection("users").doc(userId).collection('notes')
 
     const deleteNote = (theId) =>{ 
         theId && noteRef.doc(theId).delete(); 
+
+        setNotes('')
     
     }
     const editItem = () => {

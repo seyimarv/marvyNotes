@@ -1,23 +1,28 @@
 import React, {useState, useEffect} from 'react'
 import {Input, Textarea} from '../components/Form-input/Form-input'
 import firebase from '../firebase/Firebase'
-import { firestore, convertNotesSnapshotToMap} from '../firebase/Firebase'
+import { firestore} from '../firebase/Firebase'
 import Notes from '../components/Notes/Notes'
 
-import UpdateItem from '../components/EditNote/UpdateItem'
+import UpdateItemCon from '../components/EditNote/UpdateItemCon'
 import './Notepage.scss'
 
 
 
-const NotePage = () => {
+const NotePage = ({user, id}) => {
    const [notesArray, setNotesArray] = useState([])
    const [notes, setNotes] = useState({id:null, title: '', textarea: ''})
    const {title, textarea} = notes
    const [editing, setEditing ] = useState(false)
    const [isLoading, setIsloading] = useState(true)
    const [searchField, setSearchField] = useState('')
+   
+  
+   console.log(id)
 
- 
+
+
+
 
    const handleChange = (event) => {
     const { value, name } = event.target
@@ -35,7 +40,7 @@ const noteRef = firebase.firestore().collection("/notes")
    const handleSubmit = async event => {
     event.preventDefault()
     const data=firebase.firestore()
-     data.collection('notes').add({
+     data.collection('users').doc(id).collection('notes').add({
         title: title,
         textarea: textarea
     })
@@ -61,23 +66,37 @@ const noteRef = firebase.firestore().collection("/notes")
         textarea: ''
     })
  }
- const updateNotes = (notesMap) => {
-     setNotesArray(notesMap)
- }
+//  const updateNotes = (notesMap) => {
+//      setNotesArray(notesMap)
+//  }
 
 
  
  useEffect(() => {
 
-     const noteRef = firestore.collection('notes');
-     noteRef.onSnapshot(async snapshot => {
-       const notesMap =  convertNotesSnapshotToMap(snapshot);
-       updateNotes(Object.values(notesMap))
-       setIsloading(false)
-       
+     const noteRef = firestore.collection('users').doc(id).collection('notes');
+     noteRef.get().then(result => {
+        const fetchedNotes = [];
+        result.forEach(doc => {
+            const fetchedNote = {
+              id: doc.id,
+              ...doc.data()
+            };
+            fetchedNotes.push(fetchedNote);
+            
+           
+            
+        }
+        )
+        setNotesArray(fetchedNotes)
+        setIsloading(false)
+        
+        
        
      })
- }, [])
+ }, [notes])
+
+
  const filteredNotesArray = notesArray.filter(notes =>
     notes.title.toLowerCase().includes(searchField.toLowerCase())
   );
@@ -85,7 +104,7 @@ const noteRef = firebase.firestore().collection("/notes")
 
  
  return(<div className='notepage'>
-         <form class="form-inline my-2 my-lg-0 pt-3 pl-2">
+         <form class="form-inline my-2 my-lg-0 pt-3 pl-2 ">
       <input class="form-control mr-sm-2" type="search" onChange={onSearchChange} placeholder="Search notes" aria-label="Search" />
     </form>
          <div className='contain'>
@@ -99,7 +118,7 @@ const noteRef = firebase.firestore().collection("/notes")
             </div>
             <div className="col-md-6 col-sm-6 col-lg-6 right-section">
 
-                { editing ? <UpdateItem currentNote={notes} updateNote={updateNote} setNotes={setNotes} setEditing={setEditing} editing={editing} cancel={cancel}/>   :  <form className='form' onSubmit={handleSubmit} >
+                { editing ? <UpdateItemCon currentNote={notes} updateNote={updateNote} setNotes={setNotes} setEditing={setEditing} editing={editing} cancel={cancel} userid={id}/>   :  <form className='form' onSubmit={handleSubmit} userid={id} >
                         <Input className='input' name='title' type='text' value={title} handleChange={handleChange}   maxLength={50} required placeholder='Title, max of 50 characters' label='title' />
                         <Textarea className='textarea' name='textarea' type='text' value={textarea} maxLength={200} placeholder='Text, max of 200 characters' required handleChange={handleChange}/>
                         {/* <CustomButton className="btn btn-primary btn-lg" type='submit' value="submit form"> submit note</CustomButton> */}
@@ -120,7 +139,7 @@ const noteRef = firebase.firestore().collection("/notes")
                             Loading...
                         </button></div>:
             <div className='container'>
-            <Notes notesArray={filteredNotesArray} note={notes} setEditing={setEditing} setNotes={setNotes}/> </div>}
+            <Notes notesArray={filteredNotesArray} userId={id} note={notes} setEditing={setEditing} setNotes={setNotes}/> </div>}
     </div>)
 }
 

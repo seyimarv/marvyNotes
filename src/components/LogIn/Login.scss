@@ -1,0 +1,40 @@
+.login {
+    overflow: hidden;
+    padding-bottom: 150px;
+    padding-top: 50px;
+
+
+    .container {
+        border:  white 1px solid;
+		box-sizing: border-box;
+        box-shadow:  0.5rem 0.5rem 0.5rem 0.5rem rgba(0,0,0,.15);
+        width: 70%;
+        margin: auto;
+        padding-bottom: 150px;
+       
+
+    }
+    .title {
+        padding-top: 40px;
+        font-weight: 500;
+        font-size: 20px;
+        color: rgb(59, 61, 68);
+        letter-spacing: 1px;
+        text-align: center;
+    }
+
+    .title2 {
+        font-weight: 200;
+        color: rgb(59, 61, 68);
+        letter-spacing: 1px;
+        text-align: center;
+    }
+    .signup {
+        text-align: center;
+    }
+     .btn-md {
+        letter-spacing: 2px;
+        padding: 10px 20px; 
+     }
+
+}

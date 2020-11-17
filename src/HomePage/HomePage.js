@@ -4,7 +4,9 @@ import {Link} from 'react-router-dom'
 
 
 
-const HomePage = () => (
+const HomePage = ({user}) => {
+    console.log(user)
+    return (
     <div className='homepage'>
         <div className="">
             <div className="container">
@@ -19,7 +21,8 @@ const HomePage = () => (
         </div>
 
     </div>
+    )
 
-)
+}
 
 export default HomePage;

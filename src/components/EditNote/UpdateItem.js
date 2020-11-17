@@ -2,17 +2,17 @@ import React, {useState, useEffect}from 'react'
 import {Input, Textarea } from '../Form-input/Form-input'
 import firebase from '../../firebase/Firebase'
 
-const UpdateItem = ({currentNote, setEditing, cancel}) => {
-    const [note, setNote] = useState(currentNote)
+const UpdateItem = ({note, setNote, setEditing, cancel, userid, setNotes}) => {
     const {id,title, textarea} = note
+ 
      
-   
+   console.log(userid)
+   console.log(id)
+    // useEffect(() =>  {
+    //     setNote(currentNote);
 
-    useEffect(() =>  {
-        setNote(currentNote);
-
-       console.log(currentNote)
-    }, [currentNote])
+    //    console.log(currentNote)
+    // }, [currentNote])
    
 
     console.log(note)
@@ -22,8 +22,12 @@ const UpdateItem = ({currentNote, setEditing, cancel}) => {
     }
     const handleUpdate = e => {
        e.preventDefault()
-        const noteRef= firebase.firestore()
-        noteRef.collection('notes').doc(id).update({
+        const noteRef= firebase.firestore().collection('users').doc(userid).collection('notes').doc(id)
+        noteRef.update({
+            title: title,
+            textarea: textarea
+        })
+        setNotes ({
             title: title,
             textarea: textarea
         })
@@ -36,10 +40,10 @@ const UpdateItem = ({currentNote, setEditing, cancel}) => {
     return (
         <div>
             
-            <form className='form' onSubmit={handleUpdate} >
+            <form className='form' >
                 <Input className='input' name='title' type='text' maxLength={50}  required label='title' value={note.title} onChange={onChange} />
                 <Textarea className='textarea' name='textarea' maxLength={200} required type='text' value={note.textarea} onChange={onChange} />
-                 <button class="btn btn-primary btn-lg" type='submit' value="submit form">update note</button>
+                 <button class="btn btn-primary btn-lg" type='submit' value="submit form"  onClick={handleUpdate}>update note</button>
             </form>
             
         </div>

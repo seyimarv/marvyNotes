@@ -1,21 +1,57 @@
-import React from 'react';
+import React, {useState, useEffect}from 'react';
 import HomePage from './HomePage/HomePage'
-import { Switch, Route} from 'react-router-dom';
+import { Switch, Route, Redirect} from 'react-router-dom';
 import './App.css';
-import NotePage from './Notepage/Notepage'
+import NotePageCon from './Notepage/notePageCon'
 import Notes from './components/Notes/Notes';
 import Footer from './components/Footer/Footer';
+import {auth, createUserProfile} from './firebase/Firebase'
 import HomeHeader from './HomePage/HomeHeader';
+import Login from './components/LogIn/Login';
 
 
-function App() {
+
+
+const App = () => {
+  const [user, setUser] = useState(null)
+  let unsubscribeFromAuth = null;
+
+  useEffect(() => { 
+  
+     
+  auth.onAuthStateChanged(async userAuth => {
+      if (userAuth) {
+        const userRef = await createUserProfile(userAuth);
+        userRef.onSnapshot(snapShot => {
+          setUser({
+            id: snapShot.id,
+            ...snapShot.data()
+          });
+        });
+      }
+       
+    });
+
+    
+ }, [])
+ 
+ console.log(user)
   return (
     <div className="App">
-     <HomeHeader />
+   
+     <HomeHeader user={user} />
       <Switch>
-      <Route exact path = '/' component={HomePage}/>
-      <Route exact path = '/Notepage' component={NotePage} />
-      <Route  exact path='./Notes' component={Notes} />
+      <Route user={user} exact path = '/' render={() =>
+              user ? (
+                <Redirect to='/Homepage'/>
+              ) : (
+                 <Login user={user}/>
+              )
+            }/>
+       <Route exact path = '/Homepage' component={HomePage}/>
+       
+       <Route  exact path = '/Notepage' render={() => ( <NotePageCon user={user} /> )} />
+       <Route  exact path='./Notes' component={Notes} />
 
       </Switch>
       <Footer />
