@@ -46,6 +46,7 @@ const noteRef = firebase.firestore().collection("/notes")
         title: '',
         textarea: ''
     })
+    alert('note submitted')
  }
  const onSearchChange = event => {
     setSearchField( event.target.value );
@@ -84,7 +85,7 @@ const noteRef = firebase.firestore().collection("/notes")
 
  
  return(<div className='notepage'>
-         <form class="form-inline my-2 my-lg-0 pt-3 ">
+         <form class="form-inline my-2 my-lg-0 pt-3 pl-2">
       <input class="form-control mr-sm-2" type="search" onChange={onSearchChange} placeholder="Search notes" aria-label="Search" />
     </form>
          <div className='contain'>
